@@ -1,6 +1,6 @@
 type ObjRef = {
   [key: string]: {
-    timeoutToExec?: number
+    timeoutToExec?: any;
   };
 }
 
