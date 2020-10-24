@@ -1,5 +1,5 @@
-import execLatest from '../../dist/execLatest';
-import timeoutLoop from '../timeoutLoop';
+import execLatest from '../execLatest'
+import timeoutLoop from 'timeout-loop'
 
 describe('Execute only the latest call received in a determined time in milliseconds', () => {
   it('Should execute only the latest call in 3 calls made in 100 milliseconds each', async () => {
