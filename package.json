@@ -1,0 +1,23 @@
+{
+  "name": "exec-latest",
+  "version": "1.0.0",
+  "description": "Execute only the latest call received in a determined time in milliseconds.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepublish": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexandrehpiva/exec-latest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexandrehpiva/exec-latest/issues"
+  },
+  "homepage": "https://github.com/alexandrehpiva/exec-latest#readme",
+  "dependencies": {
+    "fast-hash-code": "^1.1.0"
+  }
+}
