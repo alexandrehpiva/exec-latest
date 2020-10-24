@@ -3,8 +3,9 @@ import { createRef } from './createRef'
 import { stackTrace } from './stackTrace'
 
 /**
- * Execute the latest call received in 500 milliseconds. If another call is received using the same callback function from the
- * same place before the specified time finish, it will ignore the first execution and restart the timeout.
+ * Execute the latest call received in specified time (default 500 milliseconds). If another call is received using
+ * the same callback function from the same place before the specified time finish, it will ignore the first execut
+ * on and restart the timeout.
  * @param {Function} callback Callback function to execute.
  * @param {Number} time Time in milliseconds to wait before execute.
  */
