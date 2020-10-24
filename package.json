@@ -6,7 +6,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prepublish": "tsc",
-    "build": "tsc",
     "test": "jest --config jestconfig.json"
   },
   "repository": {

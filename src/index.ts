@@ -1,3 +1,3 @@
-import execLatest from './execLatest';
+import execLatest from './execLatest'
 
 export default execLatest
