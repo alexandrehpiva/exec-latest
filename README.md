@@ -3,7 +3,9 @@ Execute the latest call received in specified time (default 500 milliseconds). I
 
 
 # What for?
-It can be used in onChange handlers (form inputs) that have a high processing cost. execLatest will wait for the user to finish typing before execute the handler function. And lots of real applications!
+It can be used in onChange handlers (form inputs) that have a high processing cost. execLatest will wait for the user to finish typing before executing the handler/callback function.
+
+And many other real applications!
 
 
 # Installation
