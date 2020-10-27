@@ -1,6 +1,6 @@
 {
   "name": "exec-latest",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Execute only the latest call received in a determined time in milliseconds.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
