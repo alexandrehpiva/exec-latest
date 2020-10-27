@@ -16,7 +16,7 @@ describe('Execute only the latest call received in a determined time in millisec
     
     const execTrace: Exec[] = []
 
-    await new Promise(async resolveExecLatest => {
+    await new Promise(async resolve => {
       await timeoutLoop(() => {
         loopCounter += 1
 
@@ -28,7 +28,7 @@ describe('Execute only the latest call received in a determined time in millisec
           execTrace.push({ loopCounter, execCounter })
 
           if (loopCounter === loopsToMake) {
-            resolveExecLatest()
+            resolve()
           }
         }, 1000)
 
@@ -53,7 +53,7 @@ describe('Execute only the latest call received in a determined time in millisec
 
     const execTrace: Exec[] = []
 
-    await new Promise(async resolveExecLatest => {
+    await new Promise(async resolve => {
       await timeoutLoop(() => {
         loopCounter += 1
         
@@ -65,7 +65,7 @@ describe('Execute only the latest call received in a determined time in millisec
           execTrace.push({ loopCounter, execCounter })
 
           if (loopCounter === loopsToMake) {
-            resolveExecLatest()
+            resolve()
           }
         }, 50)
 
