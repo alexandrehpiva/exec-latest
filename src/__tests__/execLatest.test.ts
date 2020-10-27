@@ -7,28 +7,79 @@ type Exec = {
 }
 
 describe('Execute only the latest call received in a determined time in milliseconds', () => {
-  it('Should execute only the latest call in 3 calls made in 100 milliseconds each', async () => {
+  it('Should execute only the latest call when setting the timeout greater than call time', async () => {
     let loopCounter = 0
     let execCounter = 0
+
+    // Number of calls
+    const loopsToMake = 3
+    
     const execTrace: Exec[] = []
 
     await new Promise(async resolveExecLatest => {
       await timeoutLoop(() => {
         loopCounter += 1
 
+        // Calling callback function with 1 second timeout. If the function is re-called (from the same place)
+        // in less than 1 second, the first call will be ignored.
         execLatest(() => {
           execCounter += 1
 
           execTrace.push({ loopCounter, execCounter })
-          resolveExecLatest()
-        })
-      }, 100, 3)
+
+          if (loopCounter === loopsToMake) {
+            resolveExecLatest()
+          }
+        }, 1000)
+
+      }, 100, loopsToMake)
     })
 
-    // Three executions
-    expect(loopCounter).toEqual(3)
+    // Prove that execLatest is being called all times
+    expect(loopCounter).toEqual(loopsToMake)
 
     // Only the latest call stored in execTrace
-    expect(execTrace).toEqual([{ loopCounter: 3, execCounter: 1 }])
+    expect(execTrace).toEqual([
+      { loopCounter: loopsToMake, execCounter: 1 }
+    ])
+  })
+
+  it('Should execute all calls when setting the timeout less than the call time', async () => {
+    let loopCounter = 0
+    let execCounter = 0
+
+    // Number of calls
+    const loopsToMake = 3
+
+    const execTrace: Exec[] = []
+
+    await new Promise(async resolveExecLatest => {
+      await timeoutLoop(() => {
+        loopCounter += 1
+        
+        // execLatest will wait 50 millisecond to execute the callback function. As the loop is
+        // re-calling it after this configured time, all executions will be made.
+        execLatest(() => {
+          execCounter += 1
+
+          execTrace.push({ loopCounter, execCounter })
+
+          if (loopCounter === loopsToMake) {
+            resolveExecLatest()
+          }
+        }, 50)
+
+      }, 100, loopsToMake)
+    })
+
+    // Prove that execLatest is being called all times
+    expect(loopCounter).toEqual(loopsToMake)
+
+    // All calls must be stored in execTrace
+    expect(execTrace).toEqual([
+      { loopCounter: 1, execCounter: 1 },
+      { loopCounter: 2, execCounter: 2 },
+      { loopCounter: 3, execCounter: 3 }
+    ])
   })
 })
