@@ -20,7 +20,7 @@ export const createRef = function (func: RefConfigFunction) {
 
   return function<T> (callback: () => T, ...additionalParams: any[]) {
     return new Promise(resolve => {
-      func.call(this, objRef, resolve, callback, ...additionalParams)
+      func(objRef, resolve, callback, ...additionalParams)
     }) as unknown as T
   }
 }
