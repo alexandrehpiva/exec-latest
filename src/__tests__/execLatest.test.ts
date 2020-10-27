@@ -1,5 +1,5 @@
-import execLatest from '../execLatest'
 import timeoutLoop from 'timeout-loop'
+import execLatest from '../execLatest'
 
 type Exec = {
   loopCounter: number,
@@ -13,11 +13,11 @@ describe('Execute only the latest call received in a determined time in millisec
 
     // Number of calls
     const loopsToMake = 3
-    
+
     const execTrace: Exec[] = []
 
-    await new Promise(async resolve => {
-      await timeoutLoop(() => {
+    await new Promise(resolve => {
+      timeoutLoop(() => {
         loopCounter += 1
 
         // Calling callback function with 1 second timeout. If the function is re-called (from the same place)
@@ -31,7 +31,6 @@ describe('Execute only the latest call received in a determined time in millisec
             resolve()
           }
         }, 1000)
-
       }, 100, loopsToMake)
     })
 
@@ -53,10 +52,10 @@ describe('Execute only the latest call received in a determined time in millisec
 
     const execTrace: Exec[] = []
 
-    await new Promise(async resolve => {
-      await timeoutLoop(() => {
+    await new Promise(resolve => {
+      timeoutLoop(() => {
         loopCounter += 1
-        
+
         // execLatest will wait 50 millisecond to execute the callback function. As the loop is
         // re-calling it after this configured time, all executions will be made.
         execLatest(() => {
@@ -68,7 +67,6 @@ describe('Execute only the latest call received in a determined time in millisec
             resolve()
           }
         }, 50)
-
       }, 100, loopsToMake)
     })
 
