@@ -28,7 +28,7 @@ execLatest(() => {
 Forms in React:
 
 ```jsx
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import execLatest from 'exec-latest'
 
 function FormField() {
@@ -36,16 +36,17 @@ function FormField() {
 
   const expensiveOnChangeHandler = () => {
     // Do an expensive operation with name. This will not reduce user typing experience.
+    console.log('Execution an expensive operation...')
   }
 
   useEffect(() => {
-    // Waiting for user to stop typing 
+    // Waiting for user to stop typing
     execLatest(expensiveOnChangeHandler, 500)
   }, [name])
 
   return (
     <div>
-      <input type="text" name="name" value={name} onChange={setName} />
+      <input type="text" name="name" value={name} onChange={e => setName(e.target.value)} />
     </div>
   )
 }
@@ -60,22 +61,35 @@ More elaborated example using timeoutLoop for test the function:
 import execLatest from 'exec-latest'
 import timeoutLoop from 'timeout-loop'
 
-await new Promise(async resolve => {
-  await timeoutLoop(() => {
-    loopCounter += 1
+(async () => {
+  let loopCounter = 0
+  let execCounter = 0
+  const execTrace = []
+  const loopsToMake = 3
 
-    // Calling callback function with 1 second timeout. If the function is re-called (from the same place)
-    // in less than 1 second, the first call will be ignored.
-    execLatest(() => {
-      execCounter += 1
+  await new Promise(resolve => {
+    timeoutLoop(() => {
+      loopCounter += 1
 
-      execTrace.push({ loopCounter, execCounter })
+      // Calling callback function with 1 second timeout. If the function is re-called (from the same place)
+      // in less than 1 second, the first call will be ignored.
+      execLatest(() => {
+        execCounter += 1
 
-      if (loopCounter === loopsToMake) {
-        resolve()
-      }
-    }, 1000)
+        execTrace.push({ loopCounter, execCounter })
 
-  }, 100, loopsToMake)
-})
+        // Resolve only if in the last loop
+        if (loopCounter === loopsToMake) {
+          resolve()
+        }
+      }, 1000)
+    }, 100, loopsToMake)
+  })
+
+  console.log({
+    loopCounter, // 3
+    execCounter, // 1
+    execTrace // [{ 3, 1 }] -> Only push the last object to execTrace array (means loop number 3 and is the 1st execution)
+  })
+})()
 ```
