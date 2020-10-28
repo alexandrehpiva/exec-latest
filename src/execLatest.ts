@@ -1,6 +1,5 @@
 import fastHashCode from 'fast-hash-code'
 import { createRef } from './createRef'
-import { stackTrace } from './stackTrace'
 
 /**
  * Execute the latest call received in specified time (default 500 milliseconds). If another call is received using
@@ -12,8 +11,8 @@ import { stackTrace } from './stackTrace'
 const execLatest = createRef((objRef, resolve, callback, time = 500) => {
   if (typeof callback !== 'function') return
 
-  // The function is equal and called from the same place
-  const callbackHash = fastHashCode(callback.toString() + stackTrace())
+  // Verify if the function is equal and called from the same place
+  const callbackHash = fastHashCode(callback.toString() + (new Error()).stack?.toString())
 
   if (!objRef[callbackHash]) {
     objRef[callbackHash] = {}

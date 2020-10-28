@@ -1,10 +1,10 @@
-type ObjRef = {
+export type ObjRef = {
   [key: string]: {
     timeoutToExec?: any
   }
 }
 
-type RefConfigFunction = (
+export type RefConfigFunction = (
   objRef: ObjRef,
   resolve: (value?: unknown) => void,
   callback: () => any,
@@ -12,7 +12,7 @@ type RefConfigFunction = (
 ) => void
 
 /**
- * Create a global scope object reference for execLatest function.
+ * Create a global scope object reference.
  * @param {Function} func Function that will receive the object reference.
  */
 export const createRef = function (func: RefConfigFunction) {
