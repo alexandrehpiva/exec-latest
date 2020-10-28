@@ -80,4 +80,45 @@ describe('Execute only the latest call received in a determined time in millisec
       { loopCounter: 3, execCounter: 3 }
     ])
   })
+
+  test('Two identical functions called from different places must not interfere with each other', async () => {
+    let loopCounter = 0
+    let execCounter = 0
+
+    // Number of calls
+    const loopsToMake = 10
+
+    const execTrace: Exec[] = []
+
+    const fnTest = (resolve: (value?: unknown) => void) => () => {
+      execCounter += 1
+
+      execTrace.push({ loopCounter, execCounter })
+
+      setTimeout(() => {
+        resolve()
+      }, 1000);
+    }
+
+    await new Promise(resolve => {
+      timeoutLoop(() => {
+        loopCounter += 1
+
+        // 1st call
+        execLatest(fnTest(resolve), 100)
+
+        // 2st call
+        execLatest(fnTest(resolve), 150)
+      }, 50, loopsToMake)
+    })
+    
+    // Prove that execLatest is being called all times
+    expect(loopCounter).toEqual(loopsToMake)
+
+    // The latest call of each call stored in execTrace
+    expect(execTrace).toEqual([
+      { loopCounter: loopsToMake, execCounter: 1 },
+      { loopCounter: loopsToMake, execCounter: 2 }
+    ])
+  })
 })
