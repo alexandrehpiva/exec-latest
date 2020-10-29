@@ -30,6 +30,9 @@
   },
   "keywords": [
     "latest",
+    "ignore",
+    "fast-changing",
+    "debounce",
     "call",
     "execution",
     "run",
