@@ -1,11 +1,15 @@
 # exec-latest
-Execute the latest call received in specified time (default 500 milliseconds). If another call is received using the same callback function from the same place before the specified time finish, it will ignore the first execution and restart the timeout.
+A super-light package (510 bytes gzipped) which executes only the latest call received in a specified time (default 500 milliseconds) allowing you to debounce any fast-changing value. If another call is received using the same callback function from the same place before the specified time finish, it will ignore the first execution and restart the timeout.
 
 
 # What for?
-It can be used in onChange handlers (form inputs) that have a high processing cost. execLatest will wait for the user to finish typing before executing the handler/callback function.
+- It can be used in onChange handlers (form inputs) that have a high processing cost. execLatest will wait for the user to finish typing before executing the handler/callback function.
 
-And many other real applications!
+- Ignore any unnecessary fast-changing function calls.
+
+- Call expensive operations asynchronously without reducing the user experience by lagging everything.
+
+- And many other real applications!
 
 
 # Installation
@@ -20,7 +24,6 @@ yarn add exec-latest
 
 
 # Examples
-
 Simple:
 
 ```js
@@ -42,8 +45,10 @@ function FormField() {
   const [name, setName] = useState('')
 
   const expensiveOnChangeHandler = () => {
-    // Do an expensive operation with name. This will not reduce user typing experience.
-    console.log('Execution an expensive operation...')
+    // Do an expensive operation with name (like filtering a big table list and re-render it).
+    // This will not reduce user typing experience.
+
+    console.log('Performing an expensive operation...')
   }
 
   useEffect(() => {
