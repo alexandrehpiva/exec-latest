@@ -14,6 +14,11 @@ yarn add exec-latest
 ```
 
 
+# Dist target
+- The 1.6.0 version was released in ES5 for compatibility (previous versions were targeted to ESNext). 
+- 2.0.0 version is targeting ES6.
+
+
 # Examples
 
 Simple:
