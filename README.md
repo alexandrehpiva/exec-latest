@@ -1,3 +1,5 @@
+[![npm](https://img.shields.io/npm/v/exec-latest.svg)](https://www.npmjs.com/package/exec-latest)
+
 # exec-latest
 A super-light package (510 bytes gzipped) which executes only the latest call received in a specified time (default 500 milliseconds) allowing you to debounce any fast-changing value. If another call is received using the same callback function from the same place before the specified time finish, it will ignore the first execution and restart the timeout.
 
