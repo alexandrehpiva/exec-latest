@@ -2,12 +2,12 @@ import timeoutLoop from 'timeout-loop'
 import execLatest from '../index'
 
 type Exec = {
-  loopCounter: number,
+  loopCounter: number
   execCounter: number
 }
 
-describe('Execute only the latest call received in a determined time in milliseconds', () => {
-  it('Should execute only the latest call when setting the timeout greater than call time', async () => {
+describe('execLatest', () => {
+  it('should execute only the latest call when setting the timeout greater than call time', async () => {
     let loopCounter = 0
     let execCounter = 0
 
@@ -16,34 +16,36 @@ describe('Execute only the latest call received in a determined time in millisec
 
     const execTrace: Exec[] = []
 
-    await new Promise(resolve => {
-      timeoutLoop(() => {
-        loopCounter += 1
+    await new Promise<void>(resolve => {
+      timeoutLoop(
+        () => {
+          loopCounter += 1
 
-        // Calling callback function with 1 second timeout. If the function is re-called (from the same place)
-        // in less than 1 second, the first call will be ignored.
-        execLatest(() => {
-          execCounter += 1
+          // Calling callback function with 1 second timeout. If the function is re-called (from the same place)
+          // in less than 1 second, the first call will be ignored.
+          execLatest(() => {
+            execCounter += 1
 
-          execTrace.push({ loopCounter, execCounter })
+            execTrace.push({ loopCounter, execCounter })
 
-          if (loopCounter === loopsToMake) {
-            resolve()
-          }
-        }, 1000)
-      }, 100, loopsToMake)
+            if (loopCounter === loopsToMake) {
+              resolve()
+            }
+          }, 1000)
+        },
+        100,
+        loopsToMake
+      )
     })
 
     // Prove that execLatest is being called all times
     expect(loopCounter).toEqual(loopsToMake)
 
     // Only the latest call stored in execTrace
-    expect(execTrace).toEqual([
-      { loopCounter: loopsToMake, execCounter: 1 }
-    ])
+    expect(execTrace).toEqual([{ loopCounter: loopsToMake, execCounter: 1 }])
   })
 
-  it('Should execute all calls when setting the timeout less than the call time', async () => {
+  it('should execute all calls when setting the timeout less than the call time', async () => {
     let loopCounter = 0
     let execCounter = 0
 
@@ -52,22 +54,26 @@ describe('Execute only the latest call received in a determined time in millisec
 
     const execTrace: Exec[] = []
 
-    await new Promise(resolve => {
-      timeoutLoop(() => {
-        loopCounter += 1
+    await new Promise<void>(resolve => {
+      timeoutLoop(
+        () => {
+          loopCounter += 1
 
-        // execLatest will wait 50 millisecond to execute the callback function. As the loop is
-        // re-calling it after this configured time, all executions will be made.
-        execLatest(() => {
-          execCounter += 1
+          // execLatest will wait 50 millisecond to execute the callback function. As the loop is
+          // re-calling it after this configured time, all executions will be made.
+          execLatest(() => {
+            execCounter += 1
 
-          execTrace.push({ loopCounter, execCounter })
+            execTrace.push({ loopCounter, execCounter })
 
-          if (loopCounter === loopsToMake) {
-            resolve()
-          }
-        }, 50)
-      }, 100, loopsToMake)
+            if (loopCounter === loopsToMake) {
+              resolve()
+            }
+          }, 50)
+        },
+        100,
+        loopsToMake
+      )
     })
 
     // Prove that execLatest is being called all times
@@ -97,21 +103,25 @@ describe('Execute only the latest call received in a determined time in millisec
 
       setTimeout(() => {
         resolve()
-      }, 1000);
+      }, 1000)
     }
 
     await new Promise(resolve => {
-      timeoutLoop(() => {
-        loopCounter += 1
+      timeoutLoop(
+        () => {
+          loopCounter += 1
 
-        // 1st call
-        execLatest(fnTest(resolve), 100)
+          // 1st call
+          execLatest(fnTest(resolve), 100)
 
-        // 2st call
-        execLatest(fnTest(resolve), 150)
-      }, 50, loopsToMake)
+          // 2st call
+          execLatest(fnTest(resolve), 150)
+        },
+        50,
+        loopsToMake
+      )
     })
-    
+
     // Prove that execLatest is being called all times
     expect(loopCounter).toEqual(loopsToMake)
 
@@ -119,6 +129,46 @@ describe('Execute only the latest call received in a determined time in millisec
     expect(execTrace).toEqual([
       { loopCounter: loopsToMake, execCounter: 1 },
       { loopCounter: loopsToMake, execCounter: 2 }
+    ])
+  })
+
+  it('should do nothing if the callback is not a function', async () => {
+    let loopCounter = 0
+    let execCounter = 0
+
+    // Number of calls
+    const loopsToMake = 3
+
+    const execTrace: Exec[] = []
+
+    await new Promise<void>(resolve => {
+      timeoutLoop(
+        () => {
+          loopCounter += 1
+
+          // execLatest will wait 50 millisecond to execute the callback function. As the loop is
+          // re-calling it after this configured time, all executions will be made.
+          execLatest(undefined as any, 50)
+
+          execTrace.push({ loopCounter, execCounter })
+
+          if (loopCounter === loopsToMake) {
+            resolve()
+          }
+        },
+        100,
+        loopsToMake
+      )
+    })
+
+    // Prove that execLatest is being called all times
+    expect(loopCounter).toEqual(loopsToMake)
+
+    // All calls must be stored in execTrace
+    expect(execTrace).toEqual([
+      { loopCounter: 1, execCounter: 0 },
+      { loopCounter: 2, execCounter: 0 },
+      { loopCounter: 3, execCounter: 0 }
     ])
   })
 })
