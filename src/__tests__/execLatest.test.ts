@@ -1,5 +1,5 @@
 import timeoutLoop from 'timeout-loop'
-import execLatest from '../execLatest'
+import execLatest from '../index'
 
 type Exec = {
   loopCounter: number,

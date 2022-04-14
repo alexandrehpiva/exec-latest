@@ -4,11 +4,11 @@ export type ObjRef = {
   }
 }
 
-export type RefConfigFunction = (
+export type RefConfigFunction<P extends Array<any> = any[], R = any> = (
   objRef: ObjRef,
   resolve: (value?: unknown) => void,
-  callback: () => any,
-  ...additionalParams: any[]
+  callback: () => R,
+  ...additionalParams: P
 ) => void
 
 /**
@@ -18,7 +18,7 @@ export type RefConfigFunction = (
 export const createRef = function (func: RefConfigFunction) {
   const objRef: ObjRef = {}
 
-  return function<T> (callback: () => T, ...additionalParams: any[]) {
+  return function <T>(callback: () => T, ...additionalParams: any[]) {
     return new Promise(resolve => {
       func(objRef, resolve, callback, ...additionalParams)
     }) as unknown as T
